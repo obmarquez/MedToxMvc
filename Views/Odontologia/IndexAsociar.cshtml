@@ -1,0 +1,283 @@
+﻿@model IEnumerable<MedToxMVC.Models.Consultas.ConsultasModel>
+
+@{
+    ViewData["Title"] = "Indice Asociación Odontología";
+}
+
+@using (Html.BeginForm("IndexAsociar", "Odontologia"))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Asociación Odontología. <small>Por fecha de alta</small>
+        </div>
+        <div class="panel-body">
+
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <div id="data_1">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="fecha" name="fecha" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model != null)
+{
+    <div class="table-responsive">
+
+        <table class="table table-striped table-bordered table-hover dataTables-example" name="listilla" id="listilla" data-toggle="table">
+
+            <thead>
+
+                <tr>
+
+                    <th></th>
+                    <th>IDH</th>
+                    <th>RFC</th>
+                    <th>Evaluado</th>
+                    <th>Evaluacion</th>
+                    <th>Odont.</th>
+                    <th>Gaf.</th>
+                    <th>Grupo</th>
+                    <th>Asociar</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+
+                        <td style="vertical-align:middle;"><input type="checkbox" class="i-checks" name="@item.idhistorico"></td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.idhistorico)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.rfc)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.evaluado)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.evaluacion)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.userodo)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.gafete)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.grupo)</td>
+                        <td style="vertical-align:middle;">
+                            <p>
+                                @Html.Hidden("IdH")
+                                <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalAsistencia" value="Asociar" onclick="asociar(@item.idhistorico)" />
+                            </p>
+                        </td>
+
+                    </tr>
+
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="col-lg-4">
+        @*<input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" value="Asociar" onclick="asociarMulitiple()" />*@
+        <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" value="Asociación Múltiple" onclick="multiAsociacion()" />
+    </div>
+
+
+
+    <div class="modal inmodal" id="modalAsociacion" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Asociación de Odontólogos</h4>
+                    <small class="font-bold">Historia odontológica no iniciada</small>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Elija un Odontólogo</label>
+                        @Html.DropDownList("Nombre", ViewData["odontologos"] as SelectList, new { @id = "Nombre", @class = "form-control" })
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="asociarOdonotologo();">Asociar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="modalAsociacionMultiple" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Asociación Múltiple de Evaluados</h4>
+                    <small class="font-bold">Historia odontológica no iniciada</small>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Elija un Odontólogo</label>
+                        @Html.DropDownList("NombreM", ViewData["odontologos"] as SelectList, new { @id = "NombreM", @class = "form-control" })
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="asociarMulitiple();">Asociar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    @*-- js --*@
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script language="javascript">
+
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                "order": [[6, "desc"]],
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'ExampleFile' },
+                    { extend: 'pdf', title: 'ExampleFile' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+
+        });
+
+        $('#data_1 .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+
+        function asociar(idhistorico) {
+            $("#IdH").val(idhistorico);
+
+            //alert("Idhistorico es: " + idhistorico);
+
+            $("#modalAsociacion").modal('show');
+        }
+
+        function asociarOdonotologo() {
+
+            var _idOdo = $("#Nombre").val();
+            var _idh = $("#IdH").val();
+
+            //alert("El odontologo es: " + _idOdo + " Historico: " + _idh);
+
+            $.ajaxSetup({ async: true });
+
+            $.post("js_asociar_odontologo", { p_idhistorico: _idh, p_idodontologo: _idOdo }, function (data) {
+                if (data == "Ok") {
+                    $('#modalAsociacion').modal('hide');
+                    swal({
+                        title: "Evaluado Asociado / Actualizado",
+                        text: "F5 Actualizar ventana",
+                        type: "success"
+                    });
+                }
+                else {
+                    swal({
+                        title: "No se realizó la Asociacion",
+                        text: "F5 Actualizar ventana",
+                        type: "success"
+                    });
+                }
+            });
+        }
+
+        function multiAsociacion() {
+
+            $("#modalAsociacionMultiple").modal('show');
+
+        }
+
+        function asociarMulitiple() {
+            var _idOdoM = $("#NombreM").val();
+
+            var idhistoricos = [];
+
+            var cheks = document.querySelectorAll('.i-checks');
+            cheks.forEach((e) => {
+                if (e.checked == true) {
+                    //console.log(e.value);
+                    //console.log(e.name);
+                    idhistoricos.push(e.name);
+                }
+            });
+
+            //alert("Odontologo: " + _idOdoM);
+
+            for (i = 0; i < idhistoricos.length; i++) {
+                //alert("Valor = " + idhistoricos[i]);
+
+                $.ajaxSetup({ async: true });
+
+                $.post("js_asociar_odontologo", { p_idhistorico: idhistoricos[i], p_idodontologo: _idOdoM }, function (data) {
+                    if (data == "Ok") {
+                    }                    
+                });
+            }
+
+            $('#modalAsociacionMultiple').modal('hide');
+            swal({
+                title: "Evaluado Asociado / Actualizado",
+                text: "F5 Actualizar ventana",
+                type: "success"
+            });
+
+        }
+
+    </script>
+}

@@ -1,0 +1,582 @@
+﻿@model MedToxMVC.Models.Nutricion.NutricionModel
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>Evaluación Nutriología</h5> <small>Evaluado enviado por médicos</small>
+            </div>
+            <form asp-controller="Nutricion" asp-action="GrabarActualizar" id="myForm" role="form" data-toggle="validator" method="post" accept-charset="utf-8" class="form-horizontal">
+                <div class="ibox-content">
+
+                    <input type="hidden" value="@ViewBag.accion" id="accion" name="accion" />
+                    <input type="hidden" value="@ViewBag.idhistorico" id="idhistorico" name="idhistorico" />
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <i class="fa fa-stethoscope"></i> Medidas Antropométricas
+                                </div>
+                                <div class="panel-body">
+
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Peso actual</label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.pesoactual" id="pesoactual" name="pesoactual" /></div>
+                                        <label class="col-lg-3 control-label">Talla </label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.talla" id="talla" name="talla" /></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Peso ideal</label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.pesoideal" id="pesoideal" name="pesoideal" /></div>
+                                        <label class="col-lg-3 control-label">IMC </label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.imc" id="imc" name="imc" /></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <i class="fa fa-heart"></i> Signos vitales
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Tensión art.</label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.tensionarterial" id="tensionarterial" name="tensionarterial" /></div>
+                                        <label class="col-lg-3 control-label">Frec. Card. </label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.cardiaca" id="cardiaca" name="cardiaca" /></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Frec. Resp.</label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.respiratoria" id="respiratoria" name="respiratoria" /></div>
+                                        <label class="col-lg-3 control-label">Temperatura </label>
+                                        <div class="col-lg-3"><input type="text" class="form-control" value="@ViewBag.datosEnfermeria.temperatura" id="temperatura" name="temperatura" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <i class="fa fa-cutlery"></i> Hábitos alimentarios y horarios de comida <small>Donde consume sus alimentos</small>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Desayuno</label>
+                                        <div class="col-lg-6">
+                                            @*@Html.DropDownList("Hadesayuno", (IEnumerable<SelectListItem>)ViewBag.habitoAlimentario, "Seleccione una opción", new { @class = "form-control" })*@
+                                            @Html.DropDownListFor(model => model.Hadesayuno, (IEnumerable<SelectListItem>)ViewBag.habitoAlimentario, new { @id="Hadesayuno", @class = "form-control" })
+                                        </div>
+                                        <div class="col-lg-3 input-group clockpicker" data-autoclose="true">
+                                            @*<input type="text" class="form-control" value="08:00" id="Hcdesayuno" name="Hcdesayuno" />*@
+                                            @Html.TextBoxFor(model => model.Hcdesayuno, new { @class = "form-control", @placeholder = "08:00" })
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-clock-o"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Comida</label>
+                                        <div class="col-lg-6">
+                                            @*@Html.DropDownList("Hacomida", (IEnumerable<SelectListItem>)ViewBag.habitoAlimentario, "Seleccione una opción", new { @class = "form-control" })*@
+                                            @Html.DropDownListFor(model => model.Hacomida, (IEnumerable<SelectListItem>)ViewBag.habitoAlimentario, new { @id = "Hacomida", @class = "form-control" })
+                                        </div>
+                                        <div class="col-lg-3 input-group clockpicker" data-autoclose="true">
+                                            @*<input type="text" class="form-control" value="12:00" id="Hccomida" name="Hccomida" />*@
+                                            @Html.TextBoxFor(model => model.Hccomida, new { @class = "form-control", @placeholder = "12:00" })
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-clock-o"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Cena</label>
+                                        <div class="col-lg-6">
+                                            @*@Html.DropDownList("Hacena", (IEnumerable<SelectListItem>)ViewBag.habitoAlimentario, "Seleccione una opción", new { @class = "form-control" })*@
+                                            @Html.DropDownListFor(model => model.Hacena, (IEnumerable<SelectListItem>)ViewBag.habitoAlimentario, new { @id = "Hacena", @class = "form-control" })
+                                        </div>
+                                        <div class="col-lg-3 input-group clockpicker" data-autoclose="true">
+                                            @*<input type="text" class="form-control" value="18:00" id="Hccena" name="Hccena" />*@
+                                            @Html.TextBoxFor(model => model.Hccena, new { @class = "form-control", @placeholder = "18:00" })
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-clock-o"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <i class="fa fa-glass"></i> Bebidas <small>Alcohólicas y embotelladas</small>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-lg-5">
+
+                                                <div>@Html.CheckBoxFor(model => model.bebidaalcohilica, new { @class = "i-checks", @id = "bebidaalcohilica" }) <label class="control-label"> Bebidas alcoholicas</label></div>
+
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="control-label">Número veces por mes</label>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            @*<input type="text" class="form-control" value="" id="Baveces" name="Baveces" />*@
+                                            @Html.TextBoxFor(model => model.Baveces, new { @class = "form-control", @placeholder = "0" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-lg-5">
+                                            <div>@Html.CheckBoxFor(model => model.bebidaembotellada, new { @class = "i-checks", @id = "bebidaembotellada" }) <label class="control-label"> Bebida embotellada</label></div>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="control-label">Número veces semana</label>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            @*<input type="text" class="form-control" value="" id="Beveces" name="Beveces" />*@
+                                            @Html.TextBoxFor(model => model.Beveces, new { @class = "form-control", @placeholder = "0" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <label>Padecimiento</label>
+                                            @Html.TextArea("padecimiento", new { @id = "padecimiento", @class = "form-control", rows = 2 })
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <i class="fa fa-bell-o"></i> Recordatorio de 24 horas.
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:center;"></th>
+                                                <th style="text-align:center;" colspan="2">Desayuno</th>
+                                                <th style="text-align:center;" colspan="2">Comida</th>
+                                                <th style="text-align:center;" colspan="2">Cena</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align:center;">Alimentos</td>
+                                                <td style="text-align:center;">Cantidad</td>
+                                                <td style="text-align:center;">Calorias</td>
+                                                <td style="text-align:center;">Cantidad</td>
+                                                <td style="text-align:center;">Calorias</td>
+                                                <td style="text-align:center;">Cantidad</td>
+                                                <td style="text-align:center;">Calorias</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;">Frijol</td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="frijolCantDesayuno" name="frijolCantDesayuno" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.frijolCantDesayuno, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="frijolCalDesayuno" name="frijolCalDesayuno"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="frijolCantComida" name="frijolCantComida" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.frijolCantComida, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="frijolCalComida" name="frijolCalComida"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="frijolCantCena" name="frijolCantCena" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.frijolCantCena, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="frijolCalCena" name="frijolCalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;">Tortilla</td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="toritillaCantDesayuno" name="toritillaCantDesayuno" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.toritillaCantDesayuno, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="toritillaCalDesayuno" name="toritillaCalDesayuno"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="tortillaCantComida" name="tortillaCantComida" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.tortillaCantComida, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="tortillaCalComida" name="tortillaCalComida"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="torillaCantCena" name="torillaCantCena" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.torillaCantCena, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="torillaCalCena" name="torillaCalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;">C.Q.H.</td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="CQHCantDesayuno" name="CQHCantDesayuno" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.CQHCantDesayuno, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="CQHCalDesayuno" name="CQHCalDesayuno"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="CQHCantComida" name="CQHCantComida" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.CQHCantComida, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="CQHCalComida" name="CQHCalComida"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="CQHCantCena" name="CQHCantCena" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.CQHCantCena, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="CQHCalCena" name="CQHCalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;">Frutas</td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="frutaCantDesayuno" name="frutaCantDesayuno" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.frutaCantDesayuno, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="frutaCalDesayuno" name="frutaCalDesayuno"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="frutaCantComida" name="frutaCantComida" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.frutaCantComida, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="frutaCalComida" name="frutaCalComida"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="frutaCantCena" name="frutaCantCena" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.frutaCantCena, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="frutaCalCena" name="frutaCalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;">Verduras</td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="verduraCantDesayuno" name="verduraCantDesayuno" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.verduraCantDesayuno, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="verduraCalDesayuno" name="verduraCalDesayuno"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="verdurasCantComida" name="verdurasCantComida" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.verdurasCantComida, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="verdurasCalComida" name="verdurasCalComida"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="verduraCantCena" name="verduraCantCena" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.verduraCantCena, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="verduraCalCena" name="verduraCalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;">Azucares</td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="azucaresCantDesayuno" name="azucaresCantDesayuno" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.azucaresCantDesayuno, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="azucaresCalDesayuno" name="azucaresCalDesayuno"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="azucaresCantComida" name="azucaresCantComida" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.azucaresCantComida, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="azucaresCalComida" name="azucaresCalComida"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="azucaresCantCena" name="azucaresCantCena" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.azucaresCantCena, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="azucaresCalCena" name="azucaresCalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;">Grasas</td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="grasaCantDesayuno" name="grasaCantDesayuno" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.grasaCantDesayuno, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="grasaCalDesayuno" name="grasaCalDesayuno"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="GrasaCantComida" name="GrasaCantComida" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.GrasaCantComida, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="GrasaCalComida" name="GrasaCalComida"></td>
+                                                @*<td style="text-align:center;"><input type="text" class="form-control" id="grasaCantCena" name="grasaCantCena" value="0"></td>*@
+                                                <td style="text-align:center;">@Html.TextBoxFor(model => model.grasaCantCena, new { @class = "form-control", @placeholder = "0" })</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="grasaCalCena" name="grasaCalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;"></td>
+                                                <td style="text-align:center;">Total:</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="totalDesayuno" name="totalDesayuno"></td>
+                                                <td style="text-align:center;">Total:</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="totalComida" name="totalComida"></td>
+                                                <td style="text-align:center;">Total:</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="totalCena" name="totalCena"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:center;" colspan="4">Análisis del valor nutritivo de la dieta calorías totales:</td>
+                                                <td style="text-align:center;"><input type="text" class="form-control" id="totalCaloria" name="totalCaloria"></td>
+                                                <td style="text-align:center;" colspan="2">Calorías ideles: 2000 Kcal.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <i class="fa fa-soccer-ball-o"></i> Actividad física.
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">Realiza actividad física? </label>
+                                        <div class="col-lg-2">
+                                            @*@Html.DropDownList("realizaActividad", (IEnumerable<SelectListItem>)ViewBag.respuestasino, "Seleccione", new { @class = "form-control" })*@
+                                            @Html.DropDownListFor(model => model.realizaActividad, (IEnumerable<SelectListItem>)ViewBag.respuestasino, new { @id = "realizaActividad", @class = "form-control" })
+                                        </div>
+                                        <div class="col-lg-7">
+                                            @*<input type="text" class="form-control" value="" id="actividadFisica" name="actividadFisica" />*@
+                                            @Html.TextBoxFor(model => model.actividadFisica, new { @class = "form-control", @placeholder = "Indique que actividad / Ninguno" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-6 control-label">¿Le otorgan servicio de alimentos gratuitos en su trabajo? </label>
+                                        <div class="col-lg-2">
+                                            @*@Html.DropDownList("alimentoGratis", (IEnumerable<SelectListItem>)ViewBag.respuestasino, "Seleccione", new { @class = "form-control" })*@
+                                            @Html.DropDownListFor(model => model.alimentoGratis, (IEnumerable<SelectListItem>)ViewBag.respuestasino, new { @id = "alimentoGratis", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <label>Observaciones</label>
+                                            @Html.TextArea("Observaciones", new { @id = "Observaciones", @class = "form-control", rows = 2 })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="ibox-footer">
+                    <button class="btn btn-outline btn-success dim" type="submit"><i class="fa fa-floppy-o"></i></button>
+                    <button class="btn btn-outline btn-danger dim" type="button" onclick="salir();"><i class="fa fa-sign-out"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/css/plugins/clockpicker/clockpicker.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+
+    @*-- js --*@
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/js/plugins/clockpicker/clockpicker.js"></script>
+
+    <script language="javascript">
+
+        $(document).ready(function () {
+            $('.clockpicker').clockpicker();
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            //calculara de calorias desayunos
+            $("#frijolCantDesayuno").blur(function () {
+                var _calFriDes = $("#frijolCantDesayuno").val() * 120;
+                $("#frijolCalDesayuno").val(_calFriDes);
+
+                sumaCalDes();
+            });
+
+            $("#toritillaCantDesayuno").blur(function () {
+                var _calTorDes = $("#toritillaCantDesayuno").val() * 70;
+                $("#toritillaCalDesayuno").val(_calTorDes);
+
+                sumaCalDes();
+            });
+
+            $("#CQHCantDesayuno").blur(function () {
+                var _calTorCQH = $("#CQHCantDesayuno").val() * 90;
+                $("#CQHCalDesayuno").val(_calTorCQH);
+
+                sumaCalDes();
+            });
+
+            $("#frutaCantDesayuno").blur(function () {
+                var _calFruDes = $("#frutaCantDesayuno").val() * 60;
+                $("#frutaCalDesayuno").val(_calFruDes);
+
+                sumaCalDes();
+            });
+
+            $("#verduraCantDesayuno").blur(function () {
+                var _calVerDes = $("#verduraCantDesayuno").val() * 25;
+                $("#verduraCalDesayuno").val(_calVerDes);
+
+                sumaCalDes();
+            });
+
+            $("#azucaresCantDesayuno").blur(function () {
+                var _calAzuDes = $("#azucaresCantDesayuno").val() * 45;
+                $("#azucaresCalDesayuno").val(_calAzuDes);
+
+                sumaCalDes();
+            });
+
+            $("#grasaCantDesayuno").blur(function () {
+                var _calGraDes = $("#grasaCantDesayuno").val() * 40;
+                $("#grasaCalDesayuno").val(_calGraDes);
+
+                sumaCalDes();
+            });
+
+            //calculara de calorias comida
+            $("#frijolCantComida").blur(function () {
+                var _calFriCom = $("#frijolCantComida").val() * 120;
+                $("#frijolCalComida").val(_calFriCom);
+
+                sumaCalCom();
+            });
+
+            $("#tortillaCantComida").blur(function () {
+                var _calTorCom = $("#tortillaCantComida").val() * 70;
+                $("#tortillaCalComida").val(_calTorCom);
+
+                sumaCalCom();
+            });
+
+            $("#CQHCantComida").blur(function () {
+                var _calCQHCom = $("#CQHCantComida").val() * 90;
+                $("#CQHCalComida").val(_calCQHCom);
+
+                sumaCalCom();
+            });
+
+            $("#frutaCantComida").blur(function () {
+                var _calFruCom = $("#frutaCantComida").val() * 60;
+                $("#frutaCalComida").val(_calFruCom);
+
+                sumaCalCom();
+            });
+
+            $("#verdurasCantComida").blur(function () {
+                var _calVerCom = $("#verdurasCantComida").val() * 25;
+                $("#verdurasCalComida").val(_calVerCom);
+
+                sumaCalCom();
+            });
+
+            $("#azucaresCantComida").blur(function () {
+                var _calAzuCom = $("#azucaresCantComida").val() * 45;
+                $("#azucaresCalComida").val(_calAzuCom);
+
+                sumaCalCom();
+            });
+
+            $("#GrasaCantComida").blur(function () {
+                var _calGraCom = $("#GrasaCantComida").val() * 40;
+                $("#GrasaCalComida").val(_calGraCom);
+
+                sumaCalCom();
+            });
+
+            //calculadora de calorias cena
+            $("#frijolCantCena").blur(function () {
+                var _calFriCen = $("#frijolCantCena").val() * 120;
+                $("#frijolCalCena").val(_calFriCen);
+
+                sumaCalCen();
+            });
+
+            $("#torillaCantCena").blur(function () {
+                var _calTorCen = $("#torillaCantCena").val() * 70;
+                $("#torillaCalCena").val(_calTorCen);
+
+                sumaCalCen();
+            });
+
+            $("#CQHCantCena").blur(function () {
+                var _calCQHCen = $("#CQHCantCena").val() * 90;
+                $("#CQHCalCena").val(_calCQHCen);
+
+                sumaCalCen();
+            });
+
+            $("#frutaCantCena").blur(function () {
+                var _calFruCen = $("#frutaCantCena").val() * 60;
+                $("#frutaCalCena").val(_calFruCen);
+
+                sumaCalCen();
+            });
+
+            $("#verduraCantCena").blur(function () {
+                var _calVerCen = $("#verduraCantCena").val() * 25;
+                $("#verduraCalCena").val(_calVerCen);
+
+                sumaCalCen();
+            });
+
+            $("#azucaresCantCena").blur(function () {
+                var _calAzuCen = $("#azucaresCantCena").val() * 45;
+                $("#azucaresCalCena").val(_calAzuCen);
+
+                sumaCalCen();
+            });
+
+            $("#grasaCantCena").blur(function () {
+                var _calGraCen = $("#grasaCantCena").val() * 40;
+                $("#grasaCalCena").val(_calGraCen);
+
+                sumaCalCen();
+            });
+
+            //recuperar información si accion = 2
+            if ($("#accion").val() == 2) {
+                $("#frijolCalDesayuno").val($("#frijolCantDesayuno").val() * 120);
+                $("#toritillaCalDesayuno").val($("#toritillaCantDesayuno").val() * 70);
+                $("#CQHCalDesayuno").val($("#CQHCantDesayuno").val() * 90);
+                $("#frutaCalDesayuno").val($("#frutaCantDesayuno").val() * 60);
+                $("#verduraCalDesayuno").val($("#verduraCantDesayuno").val() * 25);
+                $("#azucaresCalDesayuno").val($("#azucaresCantDesayuno").val() * 45);
+                $("#grasaCalDesayuno").val($("#grasaCantDesayuno").val() * 40);
+                sumaCalDes();
+
+                $("#frijolCalComida").val($("#frijolCantComida").val() * 120);
+                $("#tortillaCalComida").val($("#tortillaCantComida").val() * 70);
+                $("#CQHCalComida").val($("#CQHCantComida").val() * 90);
+                $("#frutaCalComida").val($("#frutaCantComida").val() * 60);
+                $("#verdurasCalComida").val($("#verdurasCantComida").val() * 25);
+                $("#azucaresCalComida").val($("#azucaresCantComida").val() * 45);
+                $("#GrasaCalComida").val($("#GrasaCantComida").val() * 40);
+                sumaCalCom();
+
+                $("#frijolCalCena").val($("#frijolCantCena").val() * 120);
+                $("#torillaCalCena").val($("#torillaCantCena").val() * 70);
+                $("#CQHCalCena").val($("#CQHCantCena").val() * 90);
+                $("#frutaCalCena").val($("#frutaCantCena").val() * 60);
+                $("#verduraCalCena").val($("#verduraCantCena").val() * 25);
+                $("#azucaresCalCena").val($("#azucaresCantCena").val() * 45);
+                $("#grasaCalCena").val($("#grasaCantCena").val() * 40);
+                sumaCalCen();
+            }
+        });
+
+        //calcular calorias desayuno
+        function sumaCalDes() {
+            $("#totalDesayuno").val(Number($("#frijolCalDesayuno").val()) + Number($("#toritillaCalDesayuno").val()) + Number($("#CQHCalDesayuno").val()) + Number($("#frutaCalDesayuno").val()) + Number($("#verduraCalDesayuno").val()) + Number($("#azucaresCalDesayuno").val()) + Number($("#grasaCalDesayuno").val()));
+
+            sumaTotalCalorias();
+        }
+
+        //calcular calorias comida
+        function sumaCalCom() {
+            $("#totalComida").val(Number($("#frijolCalComida").val()) + Number($("#tortillaCalComida").val()) + Number($("#CQHCalComida").val()) + Number($("#frutaCalComida").val()) + Number($("#verdurasCalComida").val()) + Number($("#azucaresCalComida").val()) + Number($("#GrasaCalComida").val()));
+
+            sumaTotalCalorias();
+        }
+
+        //calcular calorias cena
+        function sumaCalCen() {
+            $("#totalCena").val(Number($("#frijolCalCena").val()) + Number($("#torillaCalCena").val()) + Number($("#CQHCalCena").val()) + Number($("#frutaCalCena").val()) + Number($("#verduraCalCena").val()) + Number($("#azucaresCalCena").val()) + Number($("#grasaCalCena").val()));
+
+            sumaTotalCalorias();
+        }
+
+        //calcular el total de las calorias
+        function sumaTotalCalorias() {
+            $("#totalCaloria").val(Number($("#totalDesayuno").val()) + Number($("#totalComida").val()) + Number($("#totalCena").val()));
+        }
+
+        function salir() {
+            location.href = '@Url.Action("Index", "Nutricion")';
+        }
+       
+    </script>
+}

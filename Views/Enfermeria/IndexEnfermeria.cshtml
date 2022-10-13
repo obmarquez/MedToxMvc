@@ -1,0 +1,732 @@
+﻿@model IEnumerable<MedToxMVC.Models.Consultas.ConsultasModel>
+
+@{
+    ViewData["Title"] = "Index Enfermeria";
+}
+
+@using (Html.BeginForm("IndexEnfermeria", "Enfermeria"))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Evaluados ingresados. <small>Basado en fecha de alta</small>
+        </div>
+        <div class="panel-body">
+
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <div id="data_1">
+                        <div class="input-group date">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="fecha" name="fecha" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model != null)
+{
+    <div class="table-responsive">
+
+        <table class="table table-striped table-bordered table-hover dataTables-example">
+
+            <thead>
+                <tr>
+                    <th>IDH</th>
+                    <th>Evaluado</th>
+                    <th>Folio</th>
+                    <th>Puesto</th>
+                    <th>Edad</th>
+                    <th>Evaluacion</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                    <th>Impresiones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelItem => item.idhistorico)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelItem => item.evaluado)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelItem => item.folio)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelItem => item.puesto)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelItem => item.edad)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelItem => item.evaluacion)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.DisplayFor(modelItem => item.fecha)
+                        </td>
+                        <td style="vertical-align:middle;">
+                            @Html.Hidden("idHistorico")
+                            @Html.Hidden("accion") @*accion para saber si grabar o actualizar*@
+                            @if (item.hayAudit == 0)
+                            {
+                                <p>
+                                    <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalAsistencia" value="Nue Aud" onclick="mostrarAudit(@item.idhistorico, 1)" />
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalAsistencia" value="Act Aud" onclick="mostrarAudit(@item.idhistorico, 2)" />
+                                </p>
+                            }
+
+                            @if (item.hayNicotina == 0)
+                            {
+                                <p>
+                                    <input id="red" name="red" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalAsistencia" value="Nue Fag" onclick="mostrarFagerstrom(@item.idhistorico, 1)" />
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <input id="red" name="red" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalAsistencia" value="Act Fag" onclick="mostrarFagerstrom(@item.idhistorico, 2)" />
+                                </p>
+                            }
+                            @if (item.hayMed == 0)
+                            {
+                                <p>
+                                    <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalAsistencia" value="Nue Med" onclick="mostrarMedicamentos(@item.idhistorico, 1)" />
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <input id="blue" name="blue" type="button" class="btn btn-block btn-outline btn-success btn-xs" data-target="#modalAsistencia" value="Act Med" onclick="mostrarMedicamentos(@item.idhistorico, 2)" />
+                                </p>
+                            }
+                        </td>
+                        <td>
+                            @if (item.hayAudit != 0)
+                            {
+                                <p>
+                                    <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("testAudit","ImpresionEnfermeria", new { IdH = item.idhistorico })" target="_blank">Aud</a>
+                                    @*<a class="popup btn btn-block btn-outline btn-success btn-xs" href="../ImpresionEnfermeria/testAudit?IdH=@item.idhistorico" target="_blank">Aud</a>*@
+                                </p>
+                            }
+                            @if (item.hayNicotina != 0)
+                            {
+                                <p>
+                                    <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("testNicotina","ImpresionEnfermeria", new { IdH = item.idhistorico })" target="_blank">Nic</a>
+                                    @*<a class="popup btn btn-block btn-outline btn-success btn-xs" href="../ImpresionEnfermeria/testNicotina?IdH=@item.idhistorico" target="_blank">Nic</a>*@
+                                </p>
+                            }
+                            @if (item.hayMed != 0)
+                            {
+                                <p>
+                                    <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("textMed","ImpresionEnfermeria", new { IdH = item.idhistorico })" target="_blank">Med</a>
+                                    @*<a class="popup btn btn-block btn-outline btn-success btn-xs" href="../ImpresionEnfermeria/textMed?IdH=@item.idhistorico" target="_blank">Med</a>*@
+                                </p>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="modal inmodal" id="modalAsistencia" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+                    <h4 class="modal-title">Nuevo Test Fagerstrom</h4>
+                    <small class="font-bold">Nicotina</small>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="font-normal">¿Usted fuma cigarrillos?</label>
+                        @Html.DropDownList("cmbP00", (IEnumerable<SelectListItem>)ViewBag.vcmbP00, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">1. - ¿Cuánto tiempo pasa entre que se levanta y fuma su primer cigarrillo?</label>
+                        @Html.DropDownList("cmbP01", (IEnumerable<SelectListItem>)ViewBag.vcmbP01, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">2.- ¿Encuentra difícil no fumar en lugares donde está prohibido, como la biblioteca o el cine?</label>
+                        @Html.DropDownList("cmbP02", (IEnumerable<SelectListItem>)ViewBag.vcmbP02, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">3.- ¿Que cigarrillo le molesta más dejar de fumar?</label>
+                        @Html.DropDownList("cmbP03", (IEnumerable<SelectListItem>)ViewBag.vcmbP03, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">4.- ¿Cuántos cigarrillos fuma cada día?</label>
+                        @Html.DropDownList("cmbP04", (IEnumerable<SelectListItem>)ViewBag.vcmbP04, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">5.- ¿Fuma con más frecuencia durante las primeras horas después de levantarse que durante el resto de día?</label>
+                        @Html.DropDownList("cmbP05", (IEnumerable<SelectListItem>)ViewBag.vcmbP05, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">6.- ¿Fuma auque esté tan enfermo que tenga que guardar cama la mayor parte del día?</label>
+                        @Html.DropDownList("cmbP06", (IEnumerable<SelectListItem>)ViewBag.vcmbP06, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="NuevoFagerstrom();">Grabar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="modalAudit" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+                    <h4 class="modal-title">Test Audit</h4>
+                    <small class="font-bold">Audit</small>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="font-normal">1.- ¿Con qué frecuencia consume alguna bebida alcohólica?</label>
+                        @Html.DropDownList("vP1", (IEnumerable<SelectListItem>)ViewBag.vP1, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">2.- ¿ Cuantas copas, latas o vasos de bebidas alcoholicas suele realizar en un dia de consumo normal?</label>
+                        @Html.DropDownList("vP2", (IEnumerable<SelectListItem>)ViewBag.vP2, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">3.- ¿Con que frecuencia toma 6 o más bebidas alcohólicas en un solo dia?</label>
+                        @Html.DropDownList("vP3", (IEnumerable<SelectListItem>)ViewBag.vP3, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">4.- ¿Con qué frecuencia en el curso del último año ha sido incapaz de parar de deber una vez que ha iniciado la ingesta?</label>
+                        @Html.DropDownList("vP4", (IEnumerable<SelectListItem>)ViewBag.vP4, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">5.- ¿Con qué frecuencia en el último año no pudo hacer lo que se esperaba de usted porque había bebido?</label>
+                        @Html.DropDownList("vP5", (IEnumerable<SelectListItem>)ViewBag.vP5, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">6.- ¿Con qué frecuencia en el curso del último año ha necesitado beber en ayunas para recuperarse después de haber bebido mucho el dia anterior?</label>
+                        @Html.DropDownList("vP6", (IEnumerable<SelectListItem>)ViewBag.vP6, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">7.- ¿Con qué frecuencia en el curso del último año ha tenido remordimientos o sentimientos de culpa desúés de haber bebido?</label>
+                        @Html.DropDownList("vP7", (IEnumerable<SelectListItem>)ViewBag.vP7, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">8.- ¿Con qué frecuencia en el curso del último año no ha podido recordar lo que sucedio la noche anterior porque había estado bebiendo?</label>
+                        @Html.DropDownList("vP8", (IEnumerable<SelectListItem>)ViewBag.vP8, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">9.- ¿Usted o alguna otra persona ha resultado herido porque usted ha bebido?</label>
+                        @Html.DropDownList("vP9", (IEnumerable<SelectListItem>)ViewBag.vP9, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="font-normal">10.- ¿Algún familiar, amigo, médico o profesional de la salud ha mostrado preocupación por su consumo de bebidas alcohólicas o le han sugerido dejar de tomar?</label>
+                        @Html.DropDownList("vP10", (IEnumerable<SelectListItem>)ViewBag.vP10, "Seleccione una opción", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="NuevoAudit();">Grabar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="modalMedicamentos" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    @*<i class="fa fa-calendar modal-icon"></i>*@
+                    <h4 class="modal-title">Test Medicamentos</h4>
+                    <small class="font-bold">Medicamentos</small>
+                </div>
+                <div class="modal-body">
+                    <form method="get" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">1.- ¿Actualmente  padece alguna enfermedad?</label>
+                            <div class="col-sm-7">@Html.DropDownList("vM1", (IEnumerable<SelectListItem>)ViewBag.vM1, "Seleccione una opción", new { @class = "form-control" })</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">2.- ¿Cúal?</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" id="vM2" name="vM2"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">3.- ¿Actualmente se encuentra tomando algún medicamento?</label>
+                            <div class="col-sm-6">@Html.DropDownList("vM3", (IEnumerable<SelectListItem>)ViewBag.vM1, "Seleccione una opción", new { @class = "form-control" })</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">4.- ¿Cuenta con receta médica?</label>
+                            <div class="col-sm-8">@Html.DropDownList("vM4", (IEnumerable<SelectListItem>)ViewBag.vM4, "Seleccione una opción", new { @class = "form-control" })</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-8 control-label">5.- Si su respuesta anterior fue afirmativa indique el nombre del medicamento.</label>
+                            <div class="col-sm-4"><input type="text" class="form-control" id="vM5" name="vM5"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">6.- ¿Cuántas pastillas o cápsulas toma al día?</label>
+                            <div class="col-sm-7"><input type="text" class="form-control" id="vM6" name="vM6"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">7.- ¿Cuanto tiempo lleva consumiendo el medicamento?</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="vM7" name="vM7"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-7 control-label">8.- ¿Ha probado o consumido algún tipo de droga el último año?</label>
+                            <div class="col-sm-5">@Html.DropDownList("vM8", (IEnumerable<SelectListItem>)ViewBag.vM1, "Seleccione una opción", new { @class = "form-control" })</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">9.- Si su respuesta anterior fue afirmativa indique cúal fue.</label>
+                            <div class="col-sm-6"><input type="text" class="form-control" id="vM9" name="vM9"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">10.- ¿Cúantas veces la consumió?</label>
+                            <div class="col-sm-8"><input type="text" class="form-control" id="vM10" name="vM10"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">11.- ¿En qué cantidad la consumió?</label>
+                            <div class="col-sm-8"><input type="text" class="form-control" id="vM11" name="vM11"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="AddUpdMedi();">Grabar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    @*-- js --*@
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script language="javascript">
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'ExampleFile' },
+                    { extend: 'pdf', title: 'ExampleFile' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+
+        $('#data_1 .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+
+        /*Inicio de Nicotina*/
+        function limpiarCombos() {
+            $('#cmbP00').val('');
+            $('#cmbP01').val('');
+            $('#cmbP02').val('');
+            $('#cmbP03').val('');
+            $('#cmbP04').val('');
+            $('#cmbP05').val('');
+            $('#cmbP06').val('');
+        }
+
+        function mostrarFagerstrom(IdH, action) {
+            //alert(IdH);
+            $("#accion").val(action);
+            $('#idHistorico').val(IdH);
+            $('#modalAsistencia').modal('show');
+
+            if (action == 1) { //Nuevo Nicotina
+                limpiarCombos();
+            }
+            else {// Actualizar Nicotina
+                mostrarNicotinaRecupera(IdH);
+            }
+        }
+
+        function mostrarNicotinaRecupera(IdH) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerDatosTest", "Enfermeria")",
+                dataType:'json',
+                data: { idhistorico: IdH, test: 2 },
+                success: function (data) {
+                    $("#cmbP00").val(data.p7);
+                    $("#cmbP01").val(data.p1);
+                    $("#cmbP02").val(data.p2);
+                    $("#cmbP03").val(data.p3);
+                    $("#cmbP04").val(data.p4);
+                    $("#cmbP05").val(data.p5);
+                    $("#cmbP06").val(data.p6);
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function NuevoFagerstrom() {
+            var _idhistorico = $('#idHistorico').val();
+            var _cmbP00 = $('#cmbP00').val();
+            var _cmbP01 = $('#cmbP01').val();
+            var _cmbP02 = $('#cmbP02').val();
+            var _cmbP03 = $('#cmbP03').val();
+            var _cmbP04 = $('#cmbP04').val();
+            var _cmbP05 = $('#cmbP05').val();
+            var _cmbP06 = $('#cmbP06').val();
+            var _accion = $("#accion").val();
+
+            //si primer combo es cero todas las demas variables serán cero
+            if ($('#cmbP00').val() == "0") {
+                _cmbP01 = "0";
+                _cmbP02 = "0";
+                _cmbP03 = "0";
+                _cmbP04 = "0";
+                _cmbP05 = "0";
+                _cmbP06 = "0";
+            }
+
+            //si primer combo es diferente de cero checar que no sea nulo
+            if (_cmbP00 == "" || _cmbP01 == "" || _cmbP02 == "" || _cmbP03 == "" || _cmbP04 == "" || _cmbP05 == "" || _cmbP06 == "") {
+                swal({
+                    title: "Falta infomación por registrar",
+                    text: "Completar Combos",
+                    type: "success"
+                });
+            }
+            else {
+                /*alert("IdH: " + _idhistorico + " cmbP00: " + _cmbP00 + " cmbP01: " + _cmbP01 + " cmbP02: " + _cmbP02 + " cmbP03: " + _cmbP03 + " cmbP04: " + _cmbP04 + " cmbP05: " + _cmbP05 + " cmbP06: " + _cmbP06 + " accion: " + _accion);*/
+                var url = "@Url.Action("NuevoFagerstrom", "Enfermeria")";
+                var data = { idhistorico: _idhistorico, p1: _cmbP01, p2: _cmbP02, p3: _cmbP03, p4: _cmbP04, p5: _cmbP05, p6: _cmbP06, p7: _cmbP00, accion: _accion };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+
+                        $('#modalAsistencia').modal('hide');
+
+                        swal({
+                            title: "Test Fagerstrom Agregado / Actualizado",
+                            text: "Actualizar Pantalla?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sí Actualizar",
+                            closeOnConfirm: false
+                        }, function () {
+                            location.href = "@Url.Action("IndexEnfermeria", "Enfermeria", new { @fecha = ViewBag.fechapasar  })";
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+            }
+        }
+        /*Fin de Nicotina*/
+
+        /*Inicio Audit*/
+        function limpiarComboAudit() {
+            $('#vP1').val('');
+            $('#vP2').val('');
+            $('#vP3').val('');
+            $('#vP4').val('');
+            $('#vP5').val('');
+            $('#vP6').val('');
+            $('#vP7').val('');
+            $('#vP8').val('');
+            $('#vP9').val('');
+            $('#vP10').val('');
+        }
+
+        function mostrarAudit(IdH, action) {
+            //alert(IdH);
+            $('#idHistorico').val(IdH);
+            $("#accion").val(action);
+            $("#modalAudit").modal('show');
+
+            if (action == 1) { //nuevo
+                limpiarComboAudit();
+            }
+            else {  //actualizar
+                mostrarAuditActualizar(IdH);
+            }
+        }
+
+        function mostrarAuditActualizar(IdH){
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ObtenerDatosTest", "Enfermeria")",
+                dataType:'json',
+                data: { idhistorico: IdH, test: 1 },
+                success: function (data) {
+                    $("#vP1").val(data.pregunta1);
+                    $("#vP2").val(data.pregunta2);
+                    $("#vP3").val(data.pregunta3);
+                    $("#vP4").val(data.pregunta4);
+                    $("#vP5").val(data.pregunta5);
+                    $("#vP6").val(data.pregunta6);
+                    $("#vP7").val(data.pregunta7);
+                    $("#vP8").val(data.pregunta8);
+                    $("#vP9").val(data.pregunta9);
+                    $("#vP10").val(data.pregunta10);
+                },
+                error: function (result) {
+                    alert("Algo se envio mal de observaciones");
+                }
+            });
+        }
+
+        function NuevoAudit() {
+            var _idhistorico = $('#idHistorico').val();
+            var _vP1 = $('#vP1').val();
+            var _vP2 = $('#vP2').val();
+            var _vP3 = $('#vP3').val();
+            var _vP4 = $('#vP4').val();
+            var _vP5 = $('#vP5').val();
+            var _vP6 = $('#vP6').val();
+            var _vP7 = $('#vP7').val();
+            var _vP8 = $('#vP8').val();
+            var _vP9 = $('#vP9').val();
+            var _vP10 = $('#vP10').val();
+            var _accion = $("#accion").val();
+
+            //si primer combo es cero todas las demas variables serán cero
+            if ($('#vP1').val() == "0") {
+                _vP2 = "0";
+                _vP3 = "0";
+                _vP4 = "0";
+                _vP5 = "0";
+                _vP6 = "0";
+                _vP7 = "0";
+                _vP8 = "0";
+                _vP9 = "0";
+                _vP10 = "0";
+            }
+            //alert("P1: " + _vP1 + " P2: " + _vP2 + " P3: " + _vP3 + " P4: " + _vP4 + " P5: " + _vP5 + " P6: " + _vP6 + " P7: " + _vP7 + " P8: " + _vP8 + " P9: " + _vP9 + " P10: " + _vP10);
+
+            //si primer combo es diferente de cero checar que las demas variables no sean nulos
+            if (_vP2 == "" || _vP3 == "" || _vP4 == "" || _vP5 == "" || _vP6 == "" || _vP7 == "" || _vP8 == "" || _vP9 == "" || _vP10 == "") {
+                swal({
+                    title: "Falta infomación por registrar",
+                    text: "Completar Combos",
+                    type: "success"
+                });
+            }
+            else {
+                var url = "@Url.Action("AddUpdTestAudit", "Enfermeria")";
+                var data = { idHistorico: _idhistorico, pregunta1: _vP1, pregunta2: _vP2, pregunta3: _vP3, pregunta4: _vP4, pregunta5: _vP5, pregunta6: _vP6, pregunta7: _vP7, pregunta8: _vP8, pregunta9: _vP9, pregunta10: _vP10, accion: _accion };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+                        $('#modalAudit').modal('hide');
+
+                        //averiguar como mandar esta vista a nueva ventana
+                        //location.href = "@Url.Action("testAudit", "ImpresionEnfermeria", new { @IdH = 99361})";
+                        //Response.redirect("@Url.Action("testAudit", "ImpresionEnfermeria", new { @IdH = 99361})");
+
+                        swal({
+                            title: "Test Audit Agregado / Actualizado",
+                            text: "Actualizar Pantalla?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sí Actualizar",
+                            closeOnConfirm: false
+                        }, function () {
+                            location.href = "@Url.Action("IndexEnfermeria", "Enfermeria", new { @fecha = ViewBag.fechapasar })";
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+            }
+        }
+        /*fin Audit*/
+
+        /*Inicio Medicamentos*/
+        function limpiarMedicamento() {
+            $('#vM1').val('');
+            $('#vM2').val('');
+            $('#vM3').val('');
+            $('#vM4').val('');
+            $('#vM5').val('');
+            $('#vM6').val('');
+            $('#vM7').val('');
+            $('#vM8').val('');
+            $('#vM9').val('');
+            $('#vM10').val('');
+            $('#vM11').val('');
+        }
+
+        function mostrarMedicamentos(IdH, action) {
+            //alert("IdH: " + IdH + " Accion: " + action);
+            $('#idHistorico').val(IdH);
+            $("#accion").val(action);
+            $("#modalMedicamentos").modal('show');
+
+            if (action == 1) {
+                limpiarMedicamento();
+            }
+            else {
+                recuperarMedicamentos(IdH);
+            }
+        }
+
+        function recuperarMedicamentos(IdH) {
+	        $.ajax({
+		        type: "POST",
+		        url: "@Url.Action("ObtenerDatosTest", "Enfermeria")",
+		        dataType:'json',
+		        data: { idhistorico: IdH, test: 3 },
+		        success: function (data) {
+                    $("#vM1").val(data.padeceenfermedad);
+                    $("#vM2").val(data.enfermedad);
+                    $("#vM3").val(data.tomamedicamento);
+                    $("#vM4").val(data.cReceta);
+                    $("#vM5").val(data.medicamento);
+                    $("#vM6").val(data.cantidad);
+                    $("#vM7").val(data.tiempo);
+                    $("#vM8").val(data.consumiodroga);
+                    $("#vM9").val(data.droga);
+                    $("#vM10").val(data.frecuenciadroga);
+                    $("#vM11").val(data.cantidaddroga);
+		        },
+		        error: function (result) {
+			        alert("Algo se envio mal de observaciones");
+		        }
+	        });
+        }
+
+        function AddUpdMedi() {
+            var _idhistorico = $('#idHistorico').val();
+            var _vM1 = $('#vM1').val();
+            var _vM2 = $('#vM2').val();
+            var _vM3 = $('#vM3').val();
+            var _vM4 = $('#vM4').val();
+            var _vM5 = $('#vM5').val();
+            var _vM6 = $('#vM6').val();
+            var _vM7 = $('#vM7').val();
+            var _vM8 = $('#vM8').val();
+            var _vM9 = $('#vM9').val();
+            var _vM10 = $('#vM10').val();
+            var _vM11 = $('#vM11').val();
+            var _accion = $("#accion").val();
+
+            //validaciones internas
+            var vok = true;
+
+            if (_vM1 == "No" && _vM3 == "No" && _vM8 == "No") {
+                vok = true;
+                //_vM2 = _vM5 = _vM6 = _vM7 = _vM9 = _vM10 = _vM11 = ".";
+                //_vM4 = "No";
+            } else if (_vM1 == "Sí" && _vM2 == "") {
+                vok = false;
+                swal({
+                    title: "Debe responder Pregunta 2",
+                    text: "Completar",
+                    type: "success"
+                });
+            } else if (_vM3 == "Sí" && (_vM4 == "" || _vM5 == "" || _vM6 == "" || _vM7 == "")) {
+                vok = false;
+                swal({
+                    title: "Debe responder Pregunta 4 al 7",
+                    text: "Completar",
+                    type: "success"
+                });
+            } else if (_vM8 == "Sí" && (_vM9 == "" || _vM10 == "" || _vM11 == "")) {
+                vok = false;
+                swal({
+                    title: "Debe responder Preguntas 9 al 11",
+                    text: "Completar",
+                    type: "success"
+                });
+            }
+
+            //alert("Validacion: " + vok + " vM2: " + _vM2 + " vM4: " + _vM4 + " vM5: " + _vM5 + " vM6: " + _vM6 + " vM7: " + _vM7 + " vM9: " + _vM9 + " vM10: " + _vM10 + " vM11: " + _vM11);
+
+            //si vok es false falta por contestar alguna pregunta si es true se procede a grabar datos del test
+
+            if (vok == true) {
+                var url = "@Url.Action("AddUpdMedicamentos", "Enfermeria")";
+                var data = { idHistorico: _idhistorico, padeceenfermedad: _vM1, enfermedad: _vM2, tomamedicamento: _vM3, medicamento: _vM5, cantidad: _vM6, tiempo: _vM7, consumiodroga: _vM8, droga: _vM9, frecuenciadroga: _vM10, cantidaddroga: _vM11, cReceta: _vM4, accion: _accion };
+                $.post(url, data).done(function (data) {
+                    if (data == "Ok") {
+                        $('#modalMedicamentos').modal('hide');
+                        swal({
+                            title: "Test Medicamento Agregado / Actualizado",
+                            text: "Actualizar Pantalla?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Sí Actualizar",
+                            closeOnConfirm: false
+                        }, function () {
+                            location.href = "@Url.Action("IndexEnfermeria", "Enfermeria", new { @fecha = ViewBag.fechapasar  })";
+                        });
+                    }
+                }).fail(manejarErrorAjax);
+            }
+
+        }
+        /*Fin Medicamentos*/
+
+        function manejarErrorAjax(err) {
+            console.log(err.responseText);
+        }
+
+    </script>
+}

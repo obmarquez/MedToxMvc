@@ -1,0 +1,93 @@
+﻿@model IEnumerable<MedToxMVC.Models.Consultas.NutriDetalleMes>
+@{
+    ViewData["Title"] = "obtenerDetallesMes";
+}
+
+@using (Html.BeginForm("obtenerDetallesMes", "Nutricion"))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Consulta Detallada de Atención Nutriologa. <small>Basada en fecha de atención</small>
+        </div>
+        <div class="panel-body">
+            <div class="row form-group">
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    @Html.DropDownList("mesDetalle", (IEnumerable<SelectListItem>)ViewBag.mesesillos, "Seleccione un mes", new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model != null)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover dataTables-example">
+            <thead>
+                <tr>
+                    <th>IdH</th>
+                    <th>Evaluado</th>
+                    <th>F Ate</th>
+                    <th>Género</th>
+                    <th>Edad</th>
+                    <th>Dependencia</th>
+                    <th>Padecimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.idhistorico)</td>
+                        <td>@Html.DisplayFor(modelItem => item.evaluado)</td>
+                        <td>@Html.DisplayFor(modelItem => item.fatencion)</td>
+                        <td>@Html.DisplayFor(modelItem => item.sexo)</td>
+                        <td>@Html.DisplayFor(modelItem => item.edad)</td>
+                        <td>@Html.DisplayFor(modelItem => item.dependencia)</td>
+                        <td>@Html.DisplayFor(modelItem => item.padecimiento)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section scripts
+{
+    @*-- js --*@
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+
+    <script language="javascript">
+
+        $(document).ready(function () {
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'ExampleFile' },
+                    { extend: 'pdf', title: 'ExampleFile' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+    </script>
+}

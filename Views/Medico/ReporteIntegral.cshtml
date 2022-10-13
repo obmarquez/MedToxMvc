@@ -1,0 +1,183 @@
+﻿@model MedToxMVC.Models.Medicos.reporteIntegralModel
+
+@{
+    ViewData["Title"] = "ReporteIntegral";
+}
+
+<h5>@ViewBag.idhistorico</h5>
+
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="ibox">
+
+            <div class="ibox-title">
+
+                <h5>Reporte Integral</h5> <small>Reporte final</small>
+
+            </div>
+
+            <form asp-controller="Medico" asp-action="GrabarActualizarReporteIntegral" id="myForm" role="form" data-toggle="validator" method="post" accept-charset="utf-8" class="form-horizontal">
+
+                <div class="ibox-content">
+
+                    <input type="hidden" value="@ViewBag.idhistorico" id="idhistorico" name="idhistorico" />
+                    @*@Html.HiddenFor(model => model.folio)*@
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+
+                            <div class="panel panel-info">
+
+                                <div class="panel-heading">
+
+                                    <i class="fa fa-stethoscope"></i> Dx - Verificaciones
+
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="row">
+
+                                        <div class="col-lg-3">
+
+                                            <div class="form-group" id="data_1">
+
+                                                <label class="col-lg-4 control-label">F Eval.</label>
+
+                                                <div class="col-lg-8 input-group date">
+
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>@Html.TextBoxFor(model => model.f_evaluacion, new { @class = "form-control" })
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <div class="form-group">
+
+                                                <label class="col-lg-4 control-label">Dx</label>
+
+                                                <div class="col-lg-8">
+
+                                                    @Html.DropDownListFor(model => model.diagnostico, (IEnumerable<SelectListItem>)ViewBag.diagnostico, new { @id = "diagnostico", @class = "form-control" })
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3" style="text-align:center;">
+
+                                            <div>@Html.CheckBoxFor(model => model.bCompromiso, new { @class = "i-checks", @id = "bCompromiso" }) <label class="control-label"> Carta compromiso</label></div>
+
+                                        </div>
+
+                                        <div class="col-lg-3" style="text-align:center;">
+
+                                            <div>@Html.CheckBoxFor(model => model.bConfirmatorio, new { @class = "i-checks", @id = "bCompromiso" }) <label class="control-label"> Confirmatorio</label></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+
+                            <div class="panel panel-info">
+
+                                <div class="panel-heading">
+
+                                    <i class="fa fa-stethoscope"></i> Síntesis Técnica
+
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="form-group">
+
+                                        <div class="col-lg-12">
+
+                                            @Html.TextAreaFor(model => model.desc1, new { @class = "form-control", rows = 10 })
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="ibox-footer">
+
+                    <button class="btn btn-outline btn-success dim" type="submit"><i class="fa fa-floppy-o"></i></button>
+                    <button class="btn btn-outline btn-danger dim" type="button" onclick="salir();"><i class="fa fa-sign-out"></i></button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+
+    @*-- js --*@
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script language="javascript">
+
+        $(document).ready(function () {
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        })
+
+        $('#data_1 .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            format: "dd/mm/yyyy"
+        });
+
+        function salir() {
+            location.href = '@Url.Action("IndexMedico", "Medico")';
+        }
+
+    </script>
+}

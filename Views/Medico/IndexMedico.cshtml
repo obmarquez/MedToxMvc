@@ -1,0 +1,114 @@
+﻿@model IEnumerable<MedToxMVC.Models.Consultas.MedicoModel>
+
+@{
+    ViewData["Title"] = "IndexMedico";
+}
+
+<div class="table-responsive">
+
+    <table class="table table-striped table-bordered table-hover dataTables-example">
+
+        <thead>
+
+            <tr>
+
+                <th>IDH</th>
+                <th>EVALUADO</th>
+                <th>FECHA</th>
+                <th>DEPENDENCIA</th>
+                <th>CODIGO</th>
+                <th>FOLIO</th>
+                <th>SEXO</th>
+                <th>ACCION</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.idhistorico)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.evaluado)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.fechaAlta)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.dependencia)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.codigoevaluado)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.folio)</td>
+                        <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.sexo)</td>
+                        <td style="vertical-align:middle; text-align:center;">
+                            <p>
+                                @Html.ActionLink("His. Me.", "HistoriaMedica", new { idhistorico = item.idhistorico }, htmlAttributes: new { @class = "btn btn-block btn-outline btn-info btn-xs" })
+                            </p>
+                            <p>
+                                @Html.ActionLink("Rep. Integral", "ReporteIntegral", new { idhistorico = item.idhistorico }, htmlAttributes: new { @class = "btn btn-block btn-outline btn-info btn-xs" })
+                            </p>
+                            @if (item.hayC5 != 0)
+                            {
+                                <p><a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("HistoriaClinica","ImpresionMedica", new { idHistorico = item.idhistorico })" target="_blank"><i class="fa fa-print"></i></a></p>
+                                <p><a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("IntegralMedico","ImpresionMedica", new { idHistorico = item.idhistorico })" target="_blank"><i class="fa fa-print"></i></a></p>
+                                <p><a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("PadecimientoOdonMed","ImpresionMedica", new { idHistorico = item.idhistorico })" target="_blank"><i class="fa fa-print"></i></a></p>
+                            }
+                        </td>
+
+                    </tr>
+                }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@section scripts
+{
+@*-- css --*@
+<link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+<link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+
+@*-- js --*@
+
+<script src="~/js/plugins/dataTables/datatables.min.js"></script>
+<script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/js/plugins/iCheck/icheck.min.js"></script>
+
+<script language="javascript">
+
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                "order": [[2, "desc"]],
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'Nutricion' },
+                    { extend: 'pdf', title: 'NutricionPdf' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+
+</script>
+
+}

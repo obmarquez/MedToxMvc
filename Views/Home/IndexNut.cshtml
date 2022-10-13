@@ -1,0 +1,211 @@
+﻿@{
+    ViewData["Title"] = "SISE";
+}
+
+@*<div class="text-center">
+
+    <h1 class="display-4">Sistema Médico</h1>
+
+</div>*@
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">Total</span>
+                        <h5>Total</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@ViewBag.totalNutricion.total</h1>
+                        <div class="stat-percent font-bold text-success"><i class="fa fa-group"></i></div>
+                        <small>Total mensual</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-info pull-right">Diario</span>
+                        <h5>Hombres</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@ViewBag.totalNutricion.totalHombre</h1>
+                        <div class="stat-percent font-bold text-info"><i class="fa fa-male"></i></div>
+                        <small>Total hombres</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">Diario</span>
+                        <h5>Mujeres</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@ViewBag.totalNutricion.totalMujer</h1>
+                        <div class="stat-percent font-bold text-navy"><i class="fa fa-female"></i></div>
+                        <small>Total mujeres</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Grafica Avance Mensual <small> 2022 </small></h5>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="container_nutricion" style="min-width: 310px; height: 300px; margin: 0 auto">
+                    </div>
+                    <div id="container_nutricion_genero" style="min-width: 310px; height: 300px; margin: 0 auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+@section scripts
+{
+    <!-- Flot -->
+    <script src="~/js/plugins/flot/jquery.flot.js"></script>
+    <script src="~/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="~/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="~/js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="~/js/plugins/flot/jquery.flot.time.js"></script>
+    <script src="~/js/plugins/chartJs/Chart.min.js"></script>
+    <script src="~/scriptsHighcharts/highcharts.min.js"></script>
+    <script src="~/scriptsHighcharts/exporting.min.js"></script>
+    <script src="~/scriptsHighcharts/export-data.min.js"></script>
+    <script src="~/scriptsHighcharts/data.min.js"></script>
+    <script src="~/scriptsHighcharts/accessibility.min.js"></script>
+
+    <script type="text/javascript">
+
+        //-----------------------------------------------------------Grafica de avance Nutriologo
+        var myArray_avanceNutriologo = [];
+        var tri_avanceNutrilogo = [];
+
+        @foreach (var item3 in @ViewBag.avanceNutrición)
+        {
+            @:tri_avanceNutrilogo = ["@item3.mes",parseFloat(@item3.total), "@item3.mes" ];
+            @:myArray_avanceNutriologo.push(tri_avanceNutrilogo);
+        }
+
+        var myArrayMes_b = [];
+        var myArrayValor_hombre = [];
+        var myArrayValor_mujer = [];
+        @foreach (var item4 in ViewBag.avacennutricionEvolucion)
+        {
+            @:myArrayMes_b.push("@item4.mes");
+            @:myArrayValor_hombre.push(@item4.totalHombre);
+            @:myArrayValor_mujer.push(@item4.totalMujer);
+        }
+
+        Highcharts.chart('container_nutricion', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Evaluaciones mensuales'
+            },
+            subtitle: {
+                text: 'Evaluaciones basadas en fecha de atencion'
+            },
+            accessibility: {
+                announceNewData: {
+                    enabled: true
+                }
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Evaluaciones al mes'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+            },
+
+            series: [
+                {
+                    name: "Evaluaciones",
+                    colorByPoint: true,
+                    data: myArray_avanceNutriologo
+                }
+            ]
+        });
+
+        Highcharts.chart('container_nutricion_genero', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Genero'
+            },
+            subtitle: {
+                text: 'Mensuales'
+            },
+            xAxis: {
+                categories: myArrayMes_b,
+
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Basada Fecha de Atención'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:9px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'HOMBRE',
+                data: myArrayValor_hombre
+
+            }, {
+                name: 'MUJER',
+                data: myArrayValor_mujer
+
+            }]
+        });
+
+    </script>
+
+}

@@ -1,0 +1,138 @@
+﻿@model IEnumerable<MedToxMVC.Models.Consultas.NutriModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="table-responsive">
+
+    <table class="table table-striped table-bordered table-hover dataTables-example">
+
+        <thead>
+
+            <tr>
+
+                <th>IDH</th>
+                <th>Evaluado</th>
+                <th>Puesto</th>
+                <th>Edad</th>
+                <th>Sexo</th>
+                <th>Evaluacion</th>
+                <th>Fecha</th>
+                <th>Sup</th>
+                <th>Lab</th>
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach(var item in Model)
+            {
+                <tr>
+
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.idhistorico)</td>
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.evaluado)</td>
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.puesto)</td>
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.edad)</td>
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.sexo)</td>
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.cevaluacion)</td>
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.f_registro)</td>
+                    <td style="vertical-align:middle;">@Html.DisplayFor(modelItem => item.supervisor)</td>
+                    <td style="vertical-align:middle;">
+                        <table>
+                            <tr>
+                                <td style="padding-right: 5px;">
+                                    <p>
+                                        <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("reporteEgo","ImpresionQuimica", new { idhistorico = item.idhistorico })" target="_blank">EGO</a>
+                                    </p>
+                                </td>
+                                <td style="padding-right: 5px;">
+                                    <p>
+                                        <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("reporteBH","ImpresionQuimica", new { idhistorico = item.idhistorico })" target="_blank">BH</a>
+                                    </p>
+                                </td>
+                                <td style="padding-right: 5px;">
+                                    <p>
+                                        <a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("reporteQS","ImpresionQuimica", new { idhistorico = item.idhistorico })" target="_blank">QS</a>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="vertical-align:middle; text-align:center;">
+
+                        @if (item.hayNutricion == 0)
+                        {
+                            @Html.ActionLink("Agregar", "AddUpdNutricion", new { opcion = 1, idhistorico = item.idhistorico }, htmlAttributes: new { @class = "btn btn-block btn-outline btn-info btn-xs" })
+                        }
+                        else
+                        {
+                            <p>@Html.ActionLink("Editar", "AddUpdNutricion", new { opcion = 2, idhistorico = item.idhistorico }, htmlAttributes: new { @class = "btn btn-block btn-outline btn-danger btn-xs" })</p>
+                            <p><a class="popup btn btn-block btn-outline btn-success btn-xs" href="@Url.Action("repNutricion","ImpresionQuimica", new { idhistorico = item.idhistorico })" target="_blank"><i class="fa fa-print"></i></a></p>
+                        }
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@section scripts
+{
+    @*-- css --*@
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    @*-- js --*@
+
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script language="javascript">
+
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 50,
+                responsive: true,
+                "order": [[6, "desc"]],
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy' },
+                    { extend: 'csv' },
+                    { extend: 'excel', title: 'Nutricion' },
+                    { extend: 'pdf', title: 'NutricionPdf' },
+
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+
+            });
+        });
+
+    </script>
+
+}

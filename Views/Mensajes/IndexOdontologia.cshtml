@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewData["Title"] = "IndexNutricion";
+}
+
+<div class="row">
+
+    <div class="col-lg-4">
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="widget-head-color-box navy-bg p-lg text-center">
+
+            <div class="m-b-md">
+
+                <h2 class="font-bold no-margins">
+
+                    Expediente Odontológico Agregado
+
+                </h2>
+
+                <small>Satisfactoriamente</small>
+
+            </div>
+
+            <i class="fa fa-thumbs-up fa-5x"></i>
+
+        </div>
+
+        <div class="ibox-content">
+
+            <center>
+
+                <button class="btn btn-primary dim btn-large-dim" type="button" onclick="direccion()"><i class="fa fa-check"></i></button>
+
+            </center>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+    </div>
+
+</div>
+
+@section scripts
+{
+    <script language="javascript">
+
+        function direccion() {
+
+            location.href = '@Url.Action("IndexOdontologia", "Odontologia")';
+
+        }
+
+    </script>
+}
